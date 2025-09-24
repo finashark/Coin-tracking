@@ -4,6 +4,10 @@ Module thu thập dữ liệu thị trường từ các sàn giao dịch
 import ccxt
 import pandas as pd
 from typing import Dict, List
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from config import EXCHANGES, MONITORING_CONFIG
 
 class MarketDataCollector:

@@ -9,9 +9,13 @@ from datetime import datetime, timedelta
 import time
 
 # Import các modules từ dự án
-from data_collector.market_data import MarketDataCollector
-from analyzer.trend_analyzer import TrendAnalyzer
-from visualization.data_processor import DataVisualizer
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.data_collector.market_data import MarketDataCollector
+from src.analyzer.trend_analyzer import TrendAnalyzer
+from src.visualization.data_processor import DataVisualizer
 from config import MONITORING_CONFIG
 
 # Thiết lập trang
