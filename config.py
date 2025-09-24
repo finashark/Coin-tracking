@@ -15,8 +15,8 @@ MONITORING_CONFIG = {
     'update_interval': 300,  # 5 phút
     
     # Ngưỡng phát hiện xu hướng
-    'price_change_threshold': 5.0,  # 5% thay đổi giá
-    'volume_change_threshold': 200.0,  # 200% thay đổi volume
+    'price_change_threshold': 1.0,  # 1% thay đổi giá
+    'volume_change_threshold': 10.0,  # 10% thay đổi volume
     
     # Số lượng coin top để theo dõi
     'top_coins_limit': 100,
@@ -30,4 +30,5 @@ NOTIFICATION_CONFIG = {
     'telegram_enabled': True,
     'notification_cooldown': 3600,  # 1 giờ giữa các thông báo cho cùng một coin
     'min_notifications_interval': 300  # Thời gian tối thiểu giữa các thông báo (giây)
+
 }
