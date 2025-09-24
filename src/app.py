@@ -56,12 +56,17 @@ with col1:
     
     # Nút refresh
     if st.button("🔄 Cập nhật dữ liệu"):
-        market_df, current_trends, history_trends = update_data()
-        
-        # Lưu vào session state
-        st.session_state['market_data'] = market_df
-        st.session_state['current_trends'] = current_trends
-        st.session_state['history_trends'] = history_trends
+        try:
+            market_df, current_trends, history_trends = update_data()
+            
+            # Lưu vào session state
+            st.session_state['market_data'] = market_df
+            st.session_state['current_trends'] = current_trends
+            st.session_state['history_trends'] = history_trends
+            
+            st.success("Đã cập nhật dữ liệu thành công!")
+        except Exception as e:
+            st.error(f"Lỗi khi cập nhật dữ liệu: {str(e)}")
     
     # Hiển thị xu hướng hiện tại
     if 'current_trends' in st.session_state and not st.session_state['current_trends'].empty:
@@ -96,23 +101,27 @@ with col2:
         # Hiển thị các metrics
         st.metric(
             label="Tổng số cảnh báo",
-            value=stats['total_alerts']
+            value=stats.get('total_alerts', 0)
         )
         
         st.metric(
             label="Thay đổi giá trung bình",
-            value=f"{stats['avg_price_change']:.2f}%"
+            value=f"{stats.get('avg_price_change', 0):.2f}%"
         )
         
         st.metric(
             label="Thay đổi volume trung bình",
-            value=f"{stats['avg_volume_change']:.2f}%"
+            value=f"{stats.get('avg_volume_change', 0):.2f}%"
         )
         
         # Top coins được theo dõi nhiều nhất
         st.subheader("🔥 Coins nổi bật")
-        for coin, count in stats['most_active_coins'].items():
-            st.write(f"{coin}: {count} cảnh báo")
+        most_active_coins = stats.get('most_active_coins', {})
+        if most_active_coins:
+            for coin, count in most_active_coins.items():
+                st.write(f"{coin}: {count} cảnh báo")
+        else:
+            st.info("Chưa có dữ liệu xu hướng. Hãy đợi vài lần cập nhật.")
     
     # Hiển thị cấu hình hiện tại
     st.subheader("⚙️ Cấu hình")
@@ -124,11 +133,20 @@ with col2:
 # Auto refresh
 if st.checkbox("Tự động cập nhật"):
     time_placeholder = st.empty()
-    while True:
-        market_df, current_trends, history_trends = update_data()
-        st.session_state['market_data'] = market_df
-        st.session_state['current_trends'] = current_trends
-        st.session_state['history_trends'] = history_trends
-        
-        time_placeholder.text(f"Lần cập nhật cuối: {datetime.now().strftime('%H:%M:%S')}")
-        time.sleep(MONITORING_CONFIG['update_interval'])
+    error_placeholder = st.empty()
+    try:
+        while True:
+            try:
+                market_df, current_trends, history_trends = update_data()
+                st.session_state['market_data'] = market_df
+                st.session_state['current_trends'] = current_trends
+                st.session_state['history_trends'] = history_trends
+                
+                time_placeholder.text(f"Lần cập nhật cuối: {datetime.now().strftime('%H:%M:%S')}")
+                error_placeholder.empty()  # Xóa thông báo lỗi nếu có
+            except Exception as e:
+                error_placeholder.error(f"Lỗi khi cập nhật: {str(e)}")
+            
+            time.sleep(MONITORING_CONFIG['update_interval'])
+    except Exception as e:
+        st.error(f"Lỗi hệ thống: {str(e)}")
