@@ -16,7 +16,7 @@ MONITORING_CONFIG = {
     
     # Ngưỡng phát hiện xu hướng
     'price_change_threshold': 1.0,  # 1% thay đổi giá
-    'volume_change_threshold': 10.0,  # 10% thay đổi volume
+    'volume_change_threshold': 1.0,  # 1% thay đổi volume
     
     # Số lượng coin top để theo dõi
     'top_coins_limit': 100,
@@ -32,3 +32,4 @@ NOTIFICATION_CONFIG = {
     'min_notifications_interval': 300  # Thời gian tối thiểu giữa các thông báo (giây)
 
 }
+
